@@ -6,6 +6,7 @@
 - ✅ Commit initial: `6762baa` - "@reno-orange/saat v1.0.0"
 - ✅ Tag créé: `v1.0.0`
 - ✅ npm link fonctionnel
+- ✅ Published sur npm: https://www.npmjs.com/package/@reno-orange/saat
 
 ### Build Verification
 - ✅ `npm run build` - OK
@@ -13,16 +14,22 @@
 - ✅ 116 fichiers compilés en `dist/`
 - ✅ TypeScript declaration files (*.d.ts) générés
 
-### Prêt pour Publication
-```bash
-# Depuis /home/yrda7553/dev/saat/
-npm login --scope=@reno-orange
-npm publish
+### GitHub Actions Setup
+- ✅ Workflow publish.yml créé: Auto-publication sur npm au push de tag
+- ✅ Workflow ci.yml créé: Tests CI sur Node 18 et 20
+- ✅ NPM_TOKEN secret requis dans GitHub Repository Settings
 
-# Ou via GitHub Actions (recommandé)
-# - Créer .github/workflows/publish.yml
-# - Ajouter NPM_TOKEN aux GitHub Secrets
-# - Pousser les tags: git push --tags
+**Pour configurer:**
+1. Générer NPM token: https://www.npmjs.com/settings/~/tokens
+2. Ajouter à GitHub: Settings > Secrets and variables > Actions > New repository secret
+3. Nommer: `NPM_TOKEN`
+
+**Utilisation automatique:**
+```bash
+# Créer un nouveau tag et pousser
+git tag -a v1.1.0 -m "Release v1.1.0"
+git push origin v1.1.0
+# → GitHub Actions publie automatiquement sur npm
 ```
 
 ---
@@ -73,32 +80,50 @@ npm run saat:audit # Si existant
 
 ## 📋 Checklist Finale
 
-### Publication NPM
-- [ ] Vérifier connexion npm registry
-- [ ] Exécuter: `npm publish` depuis /dev/saat/
-- [ ] Vérifier sur https://www.npmjs.com/package/@reno-orange/saat
-- [ ] Ajouter tags GitHub: `git push origin v1.0.0`
+### Publication NPM ✅
+- ✅ Connexion npm registry vérifiée
+- ✅ npm publish exécuté depuis /dev/saat/
+- ✅ Vérifiée sur https://www.npmjs.com/package/@reno-orange/saat
+- ✅ GitHub Actions workflows créés
 
-### Migration Front
-- [ ] Installer @reno-orange/saat dans front/
-- [ ] Vérifier les imports saat existants
-- [ ] Tester npm run audit / lint-saat
-- [ ] Valider les rapports générés
-- [ ] Mettre en place CI/CD avec nouvelle lib
+### GitHub Actions Setup
+- [ ] Ajouter NPM_TOKEN secret à GitHub
+  1. Générer token: https://www.npmjs.com/settings/~/tokens
+  2. Settings > Secrets and variables > Actions > New repository secret
+  3. Nommer: `NPM_TOKEN`
+- [ ] Tester le workflow avec un nouveau tag
+- [ ] Vérifier la publication auto sur npm
+
+### Migration Front ✅
+- ✅ Installer @reno-orange/saat dans front/
+- ✅ Fichier config a11y/saat.config.js créé
+- ✅ npm run a11y:audit fonctionne
+- ✅ Rapports générés (JSON + badges SVG)
+- ✅ Conformité: 88.90% (WCAG AA)
 
 ### Nettoyage (optionnel)
 - [ ] Supprimer /shop-tv-ott/saat/ une fois testé
 - [ ] Mettre à jour scripts monorepo
 - [ ] Documenter la migration
+- [ ] Ajouter NPM_TOKEN à GitHub si publication auto souhaitée
 
 ---
 
 ## 🚀 Commandes Clés
 
-### Publier sur NPM
+### Publication avec GitHub Actions (recommandé)
+```bash
+# Créer et pousser un nouveau tag
+cd /home/yrda7553/dev/saat
+git tag -a v1.1.0 -m "Release v1.1.0: [description]"
+git push origin v1.1.0
+
+# → GitHub Actions publie automatiquement sur npm ✅
+```
+
+### Publication manuelle (si nécessaire)
 ```bash
 cd /home/yrda7553/dev/saat
-npm login --scope=@reno-orange
 npm publish
 ```
 
@@ -109,13 +134,21 @@ npm link
 
 cd /home/yrda7553/dev/shop-tv-ott/front
 npm link @reno-orange/saat
+npm run a11y:audit
 ```
 
 ### Vérifier publication
 ```bash
 npm view @reno-orange/saat versions
 npm info @reno-orange/saat
+npm view @reno-orange/saat dist-tags
 ```
+
+### Workflows GitHub Actions
+- **CI** (`.github/workflows/ci.yml`): Tests sur Node 18 et 20
+- **Publish** (`.github/workflows/publish.yml`): Publication sur npm au push de tag
+  - Déclenché: `git push origin v*`
+  - Prérequis: `NPM_TOKEN` secret configuré
 
 ---
 
