@@ -204,11 +204,11 @@ export async function runAudit(config: SaatConfig): Promise<EnhancedAuditResult>
   if (config.logging?.level !== 'quiet') {
     console.log('📍 Step 1: Scanning components...');
   }
-  const componentsDir = resolve(config.componentsDir);
+  // componentsDir is already resolved by the caller (index.ts)
   if (config.logging?.level !== 'quiet') {
-    console.log(`   Scanning directory: ${componentsDir}`);
+    console.log(`   Scanning directory: ${config.componentsDir}`);
   }
-  const componentMetadata = scanComponents(componentsDir);
+  const componentMetadata = scanComponents(config.componentsDir);
   if (config.logging?.level !== 'quiet') {
     console.log(`   Found ${componentMetadata.length} components\n`);
   }

@@ -23,12 +23,23 @@ async function runCLI(): Promise<void> {
     const configPath = process.argv.find(arg => arg.startsWith('--config='))?.split('=')[1];
     const config = await loadConfig(configPath);
 
+    // Resolve paths relative to the current working directory (where command is executed)
+    const componentsDir = resolve(process.cwd(), config.componentsDir);
+    const outputDir = resolve(process.cwd(), config.outputDir);
+    const outputFile = join(outputDir, 'saat-audit.json');
+
+    // Create a modified config with resolved paths
+    const resolvedConfig = {
+      ...config,
+      componentsDir,
+      outputDir,
+    };
+
     // Ensure output directory exists
-    mkdirSync(resolve(config.outputDir), { recursive: true });
-    const outputFile = join(resolve(config.outputDir), 'saat-audit.json');
+    mkdirSync(outputDir, { recursive: true });
 
     // Run audit using the reusable audit function
-    const report = await runAudit(config);
+    const report = await runAudit(resolvedConfig);
 
     // Write JSON report
     const reporter = new JsonReporter();
@@ -38,8 +49,8 @@ async function runCLI(): Promise<void> {
     // Generate badge if configured
     if (config.generateBadge) {
       try {
-        generateWCAGBadges(outputFile, resolve(config.outputDir));
-        console.log(`🎯 Badges generated in: ${resolve(config.outputDir)}`);
+        generateWCAGBadges(outputFile, outputDir);
+        console.log(`🎯 Badges generated in: ${outputDir}`);
       } catch (error) {
         console.warn(
           `⚠️  Badge generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
