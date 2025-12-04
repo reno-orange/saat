@@ -17,12 +17,16 @@
 ### GitHub Actions Setup
 - ✅ Workflow publish.yml créé: Auto-publication sur npm au push de tag
 - ✅ Workflow ci.yml créé: Tests CI sur Node 18 et 20
-- ✅ NPM_TOKEN secret requis dans GitHub Repository Settings
+- ✅ Trusted Publisher configuré pour authentification OIDC (recommandé)
 
-**Pour configurer:**
-1. Générer NPM token: https://www.npmjs.com/settings/~/tokens
-2. Ajouter à GitHub: Settings > Secrets and variables > Actions > New repository secret
-3. Nommer: `NPM_TOKEN`
+**Pour configurer Trusted Publisher sur npm (recommandé):**
+1. Aller à: https://www.npmjs.com/settings/~/automation
+2. Cliquer: "Create new token" → "Granular Access Token"
+3. Ou mieux: Configurer Trusted Publisher
+   - Sur npm package: Settings > Publishing
+   - Ajouter: GitHub Organization/Repository
+   - URL: `https://github.com/reno-orange/saat`
+4. Aucun secret GitHub n'est requis avec Trusted Publisher! ✅
 
 **Utilisation automatique:**
 ```bash
@@ -84,13 +88,15 @@ npm run saat:audit # Si existant
 - ✅ Connexion npm registry vérifiée
 - ✅ npm publish exécuté depuis /dev/saat/
 - ✅ Vérifiée sur https://www.npmjs.com/package/@reno-orange/saat
-- ✅ GitHub Actions workflows créés
+- ✅ GitHub Actions workflows créés avec Trusted Publisher
 
-### GitHub Actions Setup
-- [ ] Ajouter NPM_TOKEN secret à GitHub
-  1. Générer token: https://www.npmjs.com/settings/~/tokens
-  2. Settings > Secrets and variables > Actions > New repository secret
-  3. Nommer: `NPM_TOKEN`
+### GitHub Actions Setup - Trusted Publisher
+- [ ] Configurer Trusted Publisher sur npm:
+  1. Aller à: https://www.npmjs.com/settings/~/automation
+  2. Ou directement dans le package: Settings > Publishing
+  3. Ajouter: `https://github.com/reno-orange/saat`
+  4. Sauvegarder
+- [ ] **Aucun secret GitHub requis!** ✅
 - [ ] Tester le workflow avec un nouveau tag
 - [ ] Vérifier la publication auto sur npm
 
@@ -111,17 +117,22 @@ npm run saat:audit # Si existant
 
 ## 🚀 Commandes Clés
 
-### Publication avec GitHub Actions (recommandé)
+### Publication avec GitHub Actions + Trusted Publisher (recommandé)
 ```bash
-# Créer et pousser un nouveau tag
+# 1. Configurer Trusted Publisher sur npm une seule fois
+#    https://www.npmjs.com/settings/~/automation
+#    Ajouter: https://github.com/reno-orange/saat
+
+# 2. Créer et pousser un nouveau tag
 cd /home/yrda7553/dev/saat
 git tag -a v1.1.0 -m "Release v1.1.0: [description]"
 git push origin v1.1.0
 
-# → GitHub Actions publie automatiquement sur npm ✅
+# → GitHub Actions publie automatiquement avec authentification OIDC ✅
+# → Aucun secret n'est stocké! 🔒
 ```
 
-### Publication manuelle (si nécessaire)
+### Publication manuelle (si Trusted Publisher non disponible)
 ```bash
 cd /home/yrda7553/dev/saat
 npm publish
@@ -148,7 +159,7 @@ npm view @reno-orange/saat dist-tags
 - **CI** (`.github/workflows/ci.yml`): Tests sur Node 18 et 20
 - **Publish** (`.github/workflows/publish.yml`): Publication sur npm au push de tag
   - Déclenché: `git push origin v*`
-  - Prérequis: `NPM_TOKEN` secret configuré
+  - Authentification: OIDC Trusted Publisher (sécurisé, aucun secret)
 
 ---
 
