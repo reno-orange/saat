@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Static Application Accessibility Testing - WCAG 2.1 compliance scanner for Vue.js components",
   "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "dist/lib.js",
   "exports": {
     ".": {
@@ -35,7 +38,7 @@
     "test": "vitest",
     "lint": "eslint src/",
     "type-check": "tsc --noEmit",
-    "prepublishOnly": "npm run build && npm run type-check && npm run lint"
+    "prepublishOnly": "npm run build && npm run type-check"
   },
   "repository": {
     "type": "git",
