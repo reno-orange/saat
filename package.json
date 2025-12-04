@@ -1,0 +1,80 @@
+{
+  "name": "@reno-orange/saat",
+  "version": "1.0.0",
+  "description": "Static Application Accessibility Testing - WCAG 2.1 compliance scanner for Vue.js components",
+  "type": "module",
+  "main": "dist/lib.js",
+  "exports": {
+    ".": {
+      "import": "./dist/lib.js",
+      "require": "./dist/lib.js",
+      "types": "./dist/lib.d.ts"
+    },
+    "./cli": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "bin": {
+    "saat": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "audit": "node dist/index.js",
+    "audit:watch": "node --watch dist/index.js",
+    "dev": "tsx src/lib.ts",
+    "dev:watch": "tsx watch src/lib.ts",
+    "generate-badge": "tsx src/tools/generate-badge-cli.ts",
+    "badge": "npm run generate-badge",
+    "test": "vitest",
+    "lint": "eslint src/",
+    "type-check": "tsc --noEmit",
+    "prepublishOnly": "npm run build && npm run type-check && npm run lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/reno-orange/saat.git"
+  },
+  "bugs": {
+    "url": "https://github.com/reno-orange/saat/issues"
+  },
+  "homepage": "https://github.com/reno-orange/saat#readme",
+  "keywords": [
+    "accessibility",
+    "a11y",
+    "wcag",
+    "wcag-2.1",
+    "static-analysis",
+    "vue",
+    "vue-2",
+    "vue-3",
+    "testing",
+    "compliance",
+    "audit",
+    "scanner",
+    "static-code-analysis"
+  ],
+  "author": "Reno Orange",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^9.0.0",
+    "@typescript-eslint/parser": "^9.0.0",
+    "eslint": "^9.0.0",
+    "typescript": "^5.3.3",
+    "typescript-eslint": "^9.0.0",
+    "tsx": "^4.7.0",
+    "vitest": "^1.1.0"
+  }
+}
+
