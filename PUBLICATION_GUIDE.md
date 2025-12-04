@@ -17,16 +17,36 @@
 ### GitHub Actions Setup
 - ✅ Workflow publish.yml créé: Auto-publication sur npm au push de tag
 - ✅ Workflow ci.yml créé: Tests CI sur Node 18 et 20
-- ✅ Trusted Publisher configuré pour authentification OIDC (recommandé)
+- ✅ Authentification: Trusted Publisher OIDC (sans secrets!)
 
-**Pour configurer Trusted Publisher sur npm (recommandé):**
-1. Aller à: https://www.npmjs.com/settings/~/automation
-2. Cliquer: "Create new token" → "Granular Access Token"
-3. Ou mieux: Configurer Trusted Publisher
-   - Sur npm package: Settings > Publishing
-   - Ajouter: GitHub Organization/Repository
-   - URL: `https://github.com/reno-orange/saat`
-4. Aucun secret GitHub n'est requis avec Trusted Publisher! ✅
+**Checklist - Configurer Trusted Publisher sur npm:**
+
+1. ✅ **Vérifier le Repository GitHub**
+   - Repo: `reno-orange/saat` (remplacer par votre valeur réelle)
+   - Vérifier qu'il est public ou accessible
+
+2. ⬜ **Sur npm.com - Ajouter Trusted Publisher**
+   - Aller à: https://www.npmjs.com/settings/~/automation
+   - Section: "Trusted Publishers"
+   - Ajouter: GitHub Repository
+   - **Org**: `reno-orange`
+   - **Repo**: `saat`
+   - **Workflow**: `publish.yml` (le fichier du workflow)
+   - Sauvegarder
+
+3. ⬜ **Vérifier le Repository GitHub Settings**
+   - Settings > Actions > General
+   - "Workflow permissions": ✅ Read and write permissions
+   - "Allow GitHub Actions to create and approve pull requests": À votre préférence
+
+4. ✅ **Workflow GitHub Actions**
+   - `.github/workflows/publish.yml` avec permissions: `id-token: write`
+   - Aucun secret NPM_TOKEN requis! ✅
+
+**Résultat**: npm publiera uniquement quand:
+- Tag push depuis `reno-orange/saat`
+- Workflow `publish.yml`
+- Aucune clé n'est stockée sur GitHub ✅
 
 **Utilisation automatique:**
 ```bash
@@ -88,17 +108,34 @@ npm run saat:audit # Si existant
 - ✅ Connexion npm registry vérifiée
 - ✅ npm publish exécuté depuis /dev/saat/
 - ✅ Vérifiée sur https://www.npmjs.com/package/@reno-orange/saat
-- ✅ GitHub Actions workflows créés avec Trusted Publisher
+- ✅ GitHub Actions workflows créés
 
-### GitHub Actions Setup - Trusted Publisher
-- [ ] Configurer Trusted Publisher sur npm:
-  1. Aller à: https://www.npmjs.com/settings/~/automation
-  2. Ou directement dans le package: Settings > Publishing
-  3. Ajouter: `https://github.com/reno-orange/saat`
-  4. Sauvegarder
-- [ ] **Aucun secret GitHub requis!** ✅
-- [ ] Tester le workflow avec un nouveau tag
-- [ ] Vérifier la publication auto sur npm
+### GitHub Actions Setup - Trusted Publisher OIDC
+**À vérifier/configurer:**
+
+1. **Checker l'organisation/repo GitHub**
+   - [ ] Repo name: `reno-orange/saat` (ou votre URL réelle)
+   - [ ] Repo est public ou accessible
+   - [ ] `.github/workflows/publish.yml` existe avec permissions correctes
+
+2. **Configurer npm Trusted Publisher**
+   - [ ] Aller à: https://www.npmjs.com/settings/~/automation
+   - [ ] Section "Trusted Publishers"
+   - [ ] Ajouter GitHub Repository:
+     - Org: `reno-orange`
+     - Repo: `saat`
+     - Workflow: `publish.yml`
+   - [ ] Sauvegarder
+
+3. **Vérifier GitHub Actions Permissions**
+   - [ ] Settings > Actions > General
+   - [ ] "Workflow permissions": ✅ Read and write
+   - [ ] Pas de secrets à configurer! ✅
+
+4. **Tester**
+   - [ ] Créer tag et pousser: `git push origin v1.1.0`
+   - [ ] Vérifier GitHub Actions > Publish workflow
+   - [ ] Vérifier publication sur npm
 
 ### Migration Front ✅
 - ✅ Installer @reno-orange/saat dans front/
@@ -117,49 +154,40 @@ npm run saat:audit # Si existant
 
 ## 🚀 Commandes Clés
 
-### Publication avec GitHub Actions + Trusted Publisher (recommandé)
+### Publication avec GitHub Actions + Trusted Publisher
 ```bash
-# 1. Configurer Trusted Publisher sur npm une seule fois
-#    https://www.npmjs.com/settings/~/automation
-#    Ajouter: https://github.com/reno-orange/saat
+# 1. S'assurer que le repo GitHub et Trusted Publisher sont configurés
+#    (voir checklist ci-dessus)
 
 # 2. Créer et pousser un nouveau tag
 cd /home/yrda7553/dev/saat
 git tag -a v1.1.0 -m "Release v1.1.0: [description]"
 git push origin v1.1.0
 
-# → GitHub Actions publie automatiquement avec authentification OIDC ✅
-# → Aucun secret n'est stocké! 🔒
+# 3. GitHub Actions:
+#    - Déclenche automatiquement le workflow
+#    - Utilise Trusted Publisher OIDC
+#    - Publie sur npm sans token stocké! ✅
 ```
 
-### Publication manuelle (si Trusted Publisher non disponible)
+### Vérifier que tout est configuré
 ```bash
-cd /home/yrda7553/dev/saat
-npm publish
-```
+# Vérifier le repo GitHub
+git remote -v
 
-### Tester localement
-```bash
-cd /home/yrda7553/dev/saat
-npm link
+# Vérifier que le workflow existe
+cat .github/workflows/publish.yml | grep -A5 "id-token: write"
 
-cd /home/yrda7553/dev/shop-tv-ott/front
-npm link @reno-orange/saat
-npm run a11y:audit
-```
-
-### Vérifier publication
-```bash
-npm view @reno-orange/saat versions
-npm info @reno-orange/saat
-npm view @reno-orange/saat dist-tags
+# Vérifier npm package
+npm view @reno-orange/saat
 ```
 
 ### Workflows GitHub Actions
 - **CI** (`.github/workflows/ci.yml`): Tests sur Node 18 et 20
-- **Publish** (`.github/workflows/publish.yml`): Publication sur npm au push de tag
+- **Publish** (`.github/workflows/publish.yml`): 
   - Déclenché: `git push origin v*`
-  - Authentification: OIDC Trusted Publisher (sécurisé, aucun secret)
+  - Authentification: OIDC Trusted Publisher
+  - Aucun secret requis ✅
 
 ---
 
