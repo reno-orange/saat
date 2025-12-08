@@ -33,7 +33,7 @@ jobs:
         run: npm run type-check
 
       - name: Publish to NPM with Trusted Publisher
-        run: npm publish
+        uses: npm/action-publish@master
 
       - name: Create Release
         uses: actions/create-release@v1
